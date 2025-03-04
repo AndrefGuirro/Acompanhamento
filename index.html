@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes com Vasilhames Emprestados</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div>
+        <h1>Clientes com Vasilhames Emprestados</h1>
+
+        <!-- Barra de busca com "X" para limpar -->
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Pesquise por nome, código ou tipo" oninput="filtrarClientes()">
+            <span id="clear-search" onclick="limparBusca()" style="cursor: pointer;">&#10006;</span>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>CÓDIGO</th>
+                    <th>CLIENTE</th>
+                    <th>TIPO</th>
+                    <th>QTDE</th>
+                </tr>
+            </thead>
+            <tbody id="tabela-clientes">
+                <!-- Dados da tabela vão aqui -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
