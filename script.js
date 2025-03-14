@@ -1,6 +1,11 @@
 let clientes = [];
+let filtroRotaAtivo = false;
+let diaSelecionado = "";
 
-// Função para corrigir o problema de codificação do "Litrão"
+// Definir a ordem desejada dos dias da semana
+const ordemDias = ["segunda", "terca", "quarta", "quinta", "sexta", "sabado"];
+
+// Função para corrigir problemas de codificação (exemplo: "Litrão")
 function corrigirTexto(texto) {
   if (!texto) return "";
   return texto.replace("Litrï¿½o", "Litrão");
@@ -13,7 +18,7 @@ async function carregarCSV() {
 
   const linhas = data.split("\n").map(linha => linha.trim()).filter(linha => linha);
   const cabecalho = linhas[0].split(";");
-  
+
   // Criar o array de clientes
   clientes = linhas.slice(1).map(linha => {
     const valores = linha.split(";");
@@ -24,7 +29,14 @@ async function carregarCSV() {
     return cliente;
   });
 
-  // Exibir os clientes ao carregar o CSV
+  // Ordenar clientes pela ordem dos dias da semana
+  clientes.sort((a, b) => {
+    const diaA = (a["ROTA"] || "").toLowerCase();
+    const diaB = (b["ROTA"] || "").toLowerCase();
+    return ordemDias.indexOf(diaA) - ordemDias.indexOf(diaB);
+  });
+
+  // Exibir os clientes ordenados ao carregar o CSV
   exibirClientes(clientes);
 }
 
@@ -33,7 +45,6 @@ function exibirClientes(clientesFiltrados) {
   let tabela = document.getElementById("tabela-clientes");
   tabela.innerHTML = ""; // Limpa a tabela antes de exibir os dados
 
-  // Exibe os clientes na tabela
   clientesFiltrados.forEach(cliente => {
     let linha = `<tr>
       <td>${cliente["CODIGO"]}</td>
@@ -48,9 +59,8 @@ function exibirClientes(clientesFiltrados) {
 // Função para filtrar os clientes conforme a busca
 function filtrarClientes() {
   const input = document.getElementById("search-input").value.toLowerCase();
-  
-  // Filtra os clientes com base no que o usuário digitou
-  const clientesFiltrados = clientes.filter(cliente => {
+
+  let clientesFiltrados = clientes.filter(cliente => {
     return (
       cliente["CODIGO"].toLowerCase().includes(input) ||
       cliente["CLIENTE"].toLowerCase().includes(input) ||
@@ -58,7 +68,13 @@ function filtrarClientes() {
     );
   });
 
-  // Exibe os resultados filtrados
+  // Aplicar filtro de rota se estiver ativado
+  if (filtroRotaAtivo && diaSelecionado) {
+    clientesFiltrados = clientesFiltrados.filter(cliente => 
+      cliente["ROTA"] && cliente["ROTA"].toLowerCase() === diaSelecionado
+    );
+  }
+
   exibirClientes(clientesFiltrados);
 
   // Mostrar ou esconder o "X" dependendo se há pesquisa
@@ -72,10 +88,25 @@ function filtrarClientes() {
 
 // Função para limpar a busca
 function limparBusca() {
-  document.getElementById("search-input").value = ""; // Limpa o campo de pesquisa
-  exibirClientes(clientes); // Exibe todos os clientes novamente
+  document.getElementById("search-input").value = "";
+  aplicarFiltroRota(); // Mantém o filtro da rota se estiver ativo
   const clearButton = document.getElementById("clear-search");
-  clearButton.classList.remove("show"); // Esconde o "X"
+  clearButton.classList.remove("show");
+}
+
+// Função para aplicar ou remover o filtro de rota
+function aplicarFiltroRota(dia = "") {
+  if (dia === diaSelecionado) {
+    filtroRotaAtivo = false;
+    diaSelecionado = "";
+    document.getElementById("rota-btn").classList.remove("active");
+    exibirClientes(clientes);
+  } else {
+    filtroRotaAtivo = true;
+    diaSelecionado = dia;
+    document.getElementById("rota-btn").classList.add("active");
+    exibirClientes(clientes.filter(cliente => cliente["ROTA"]?.toLowerCase() === dia));
+  }
 }
 
 // Carregar os clientes ao carregar a página

@@ -21,6 +21,22 @@
             </button>
         </div>
 
+        <!-- Filtro da rora do dia -->
+        <div class="dropdown">
+            <button id="rota-btn" class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+              ROTA
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#" onclick="aplicarFiltroRota('segunda')">Segunda</a></li>
+              <li><a class="dropdown-item" href="#" onclick="aplicarFiltroRota('terca')">Terça</a></li>
+              <li><a class="dropdown-item" href="#" onclick="aplicarFiltroRota('quarta')">Quarta</a></li>
+              <li><a class="dropdown-item" href="#" onclick="aplicarFiltroRota('quinta')">Quinta</a></li>
+              <li><a class="dropdown-item" href="#" onclick="aplicarFiltroRota('sexta')">Sexta</a></li>
+              <li><a class="dropdown-item" href="#" onclick="aplicarFiltroRota('sabado')">Sábado</a></li>
+            </ul>
+          </div>
+          
+
         <!-- Tabela de Clientes -->
         <table class="table table-bordered">
             <thead class="thead-light">
